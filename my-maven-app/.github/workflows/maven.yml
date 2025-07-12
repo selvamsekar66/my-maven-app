@@ -2,9 +2,7 @@ name: Maven Build
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -21,4 +19,16 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Maven
-      run: mvn -B clean verify
+      run: mvn -B clean package
+
+    - name: Deploy WAR file via SSH
+      uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      with:
+        host: ${{ secrets.HOST }}
+        user: ${{ secrets.USERNAME }}
+        pass: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        scp: |
+          ./target/*.war => /tmp
+        last_ssh: |
+          ls -lh /tmp
