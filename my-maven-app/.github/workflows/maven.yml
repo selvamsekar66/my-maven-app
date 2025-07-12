@@ -20,6 +20,7 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B clean package
+      working-directory: my-maven-app
 
     - name: Deploy WAR file via SSH
       uses: cross-the-world/ssh-scp-ssh-pipelines@latest
